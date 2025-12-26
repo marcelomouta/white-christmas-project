@@ -105,20 +105,60 @@ def classify_white_xmas(xmas_year_raster, snow_threshold=1):
     # Define the bins
     bins = [0, snow_threshold, np.inf]
 
+    return reclassify_raster(xmas_year_raster, bins)
+    
+
+def classify_prob_white_xmas(xmas_sum_raster):
+    """
+    Classify probability of white Christmas over 10 years
+
+    This classification mimics the one used in the first map of this FMI statistics:
+    https://en.ilmatieteenlaitos.fi/christmas-weather 
+    
+    Args:
+        xmas_sum_raster (DataArray): raster containing the counts of white christmas over 10-year period
+
+    Returns:
+        DataArray: reclassified raster with 5 probability classes of white Christmas ocurrence
+    """
+    
+    # Define the bins
+    bins = [0, 6, 8.3, 9.3, 9.7, 10]
+
+    return reclassify_raster(xmas_sum_raster, bins)
+
+
+def reclassify_raster(raster, bins):
+
     # Apply the reclassification
-    reclassified_raster = np.digitize(xmas_year_raster, bins)
+    reclassified = np.digitize(raster, bins)
 
     # Retain NaN values by ensuring they are not reclassified
-    reclassified_raster = np.where(~np.isnan(xmas_year_raster), reclassified_raster, np.nan)
+    reclassified = np.where(~np.isnan(raster), reclassified, np.nan)
 
     # Convert to an xarray DataArray
-    reclassified_raster = xr.DataArray(
-        reclassified_raster,
-        dims=xmas_year_raster.dims,  # Keep the same dimensions
-        coords=xmas_year_raster.coords,  # Retain the spatial coordinates
-        attrs=xmas_year_raster.attrs  # Preserve the original attributes
+    reclassified = xr.DataArray(
+        reclassified,
+        dims=raster.dims,  # Keep the same dimensions
+        coords=raster.coords,  # Retain the spatial coordinates
+        attrs=raster.attrs  # Preserve the original attributes
     )
-    return reclassified_raster
+    return reclassified
+
+
+def plot_prob_white_xmas(reclassified_raster, start_year, end_year):
+
+    # Reproject raster for better map visualisation
+    plot_raster = reproject_map(reclassified_raster)
+    
+    # create custom cmap
+    custom_cmap = plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
+    
+    # Plot using xarray's plot method
+    plot = plot_raster.plot(cmap=custom_cmap, figsize=(6,6))
+    plt.axis('off')
+    plt.title(f"Probability of White Christmas in Finland {start_year}-{end_year}")
+    plt.show()
 
 
 def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
@@ -127,10 +167,13 @@ def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
     """
 
     # Reproject raster for better map visualisation
-    plot_raster = reclassified_raster.rio.reproject(dst_crs="EPSG:3857")
+    plot_raster = plot_raster = reproject_map(reclassified_raster)
 
+    # create custom cmap
+    snow_cmap = plt.matplotlib.colors.ListedColormap(['dimgray', 'lightblue'])
+    
     # Plot using xarray's plot method
-    plot = plot_raster.plot(cmap=plt.matplotlib.colors.ListedColormap(['dimgray', 'lightblue']), figsize=(6,6))
+    plot = plot_raster.plot(cmap=snow_cmap, figsize=(6,6))
 
     # Set only the classification ticks on the colorbar
     colorbar = plot.colorbar
@@ -144,6 +187,11 @@ def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
 
     plt.title(f"White Christmas {year}")
     plt.show()
+
+
+def reproject_map(raster, crs="EPSG:3857"):
+    return raster.rio.reproject(dst_crs=crs)
+
 
 def get_tick_locations(ticks):
     """Calculate tick locations at 1/4 and 3/4 of the classification scale"""
