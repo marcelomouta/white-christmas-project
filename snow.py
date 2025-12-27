@@ -28,6 +28,17 @@ def open_snow_year_raster(raster_dir, year):
     return year_raster
 
 
+def check_year_interval(start_year, end_year):
+    """
+    Check if given interval is within year range for which snow depth data is available
+
+    Raises:
+        ValueError: If start_year and end_year do not form a valid interval within 1961-2022
+    """
+    if start_year < 1961 or end_year < start_year:
+        raise ValueError("start_year and end_year do not form a valid interval within 1961-2022")
+
+
 def open_snow_rasters(raster_dir, start_year=1961, end_year=2022, missing_data=False):
     """
     Return dictionary with all snow depth rasters in given year interval
@@ -44,10 +55,8 @@ def open_snow_rasters(raster_dir, start_year=1961, end_year=2022, missing_data=F
     Raises:
         ValueError: If start_year and end_year do not form a valid interval within 1961-2022
     """
-
-    # year range for which snow depth data is available [1961-2022]
-    if start_year < 1961 or end_year < start_year:
-        raise ValueError("start_year and end_year do not form a valid interval within 1961-2022")
+    # check if given interval is valid
+    check_year_interval(start_year, end_year)
 
     # year interval for which snow data will be retrieved
     year_interval = range(start_year, end_year+1)
@@ -63,7 +72,6 @@ def open_snow_rasters(raster_dir, start_year=1961, end_year=2022, missing_data=F
             # If data is not expected to be missing, print IO error
             if not missing_data:
                 print(e)
-        
 
     return snow_rasters
 
@@ -94,38 +102,14 @@ def xmas_avg_snow_rasters(snow_rasters):
     return xmas_snow
 
 
-def classify_all_white_xmas(year_raster, snow_threshold=1):
-    """
-    Classify Christmas (24.-26.12) as white if all 3 days are white
-
-    Args:
-        year_raster (DataArray): raster with year snow depth cover
-        snow_threshold (int, optional): Snow depth threshold (in cm) for day to be considered white. Defaults to 1.
-
-    Returns:
-        DataArray: Reclassified raster with class 1 for all white christmas and class 0 otherwise 
-    """
-
-    xmas_days_indices = [-8, -7, -6] # indices for 24-26 December
-
-    xmas_rasters = []
-    for i in xmas_days_indices:
-        xmas_day_raster = year_raster.isel(band=i)
-        white_xmas_day = classify_white_day(xmas_day_raster, snow_threshold)
-        xmas_rasters.append(white_xmas_day)
-
-    return xmas_rasters[0] * xmas_rasters[1] * xmas_rasters[2]
-
-
-        
-
 def classify_white_day(snow_day_raster, snow_threshold=1):
     """
     Classify day as white given snow raster for single day (or day average)
 
     Args:
         snow_day_raster (DataArray): raster with snow depth cover for that day (or day average)
-        snow_threshold (int, optional): Snow depth threshold in cm for day to be considered white. Defaults to 1.
+        snow_threshold (int, optional): Snow depth threshold (in cm) for day to be considered white.
+            Defaults to 1.
 
     Returns:
         DataArray: Reclassified raster with classes 0 for no-snow and 1 for white day 
@@ -144,7 +128,82 @@ def classify_white_day(snow_day_raster, snow_threshold=1):
     reclassified -= 1
     
     return reclassified
+
+
+def classify_all_white_xmas(year_raster, snow_threshold=1):
+    """
+    Classify Christmas (24.-26.12) as white if all 3 days are white
+
+    Args:
+        year_raster (DataArray): raster with year snow depth cover
+        snow_threshold (int, optional): Snow depth threshold (in cm) for day to be considered white.
+            Defaults to 1.
+
+    Returns:
+        DataArray: Reclassified raster with class 1 for all white christmas and class 0 otherwise 
+    """
+
+    xmas_days_indices = [-8, -7, -6] # indices for 24-26 December
+
+    xmas_rasters = []
+    for i in xmas_days_indices:
+        xmas_day_raster = year_raster.isel(band=i)
+        white_xmas_day = classify_white_day(xmas_day_raster, snow_threshold)
+        xmas_rasters.append(white_xmas_day)
+
+    return xmas_rasters[0] * xmas_rasters[1] * xmas_rasters[2]
+
+
+def white_xmas_avg_sum(xmas_avg_snow, start_year=1991, end_year=2020, snow_threshold=1):
+    """
+    Classify and sum white christmas occurrences over given year period.
+    Christmas is classified as white if average snow depth
+    of 3 christmas days (24-26) is bigger than given threshold.
+
+    Args:
+        xmas_avg_snow (dict[int, DataArray]): dictionary keyed by year with christmas average snow depth rasters as values.
+        start_year (int, optional): Start year of the interval, minimum is 1961. Defaults to 1991.
+        end_year (int, optional): End year of the interval. Defaults to 2020.
+        snow_threshold (int, optional): Snow depth threshold (in cm) for day to be considered white.
+            Defaults to 1.
+
+    Returns:
+        DataArray: raster containing the sum of white christmas over given period
+    """
+    # check if given interval is valid
+    check_year_interval(start_year, end_year)
+
+    white_xmas_sum = classify_white_day(xmas_avg_snow[start_year], snow_threshold)
+    for year in range(start_year+1, end_year+1):
+       white_xmas_sum += classify_white_day(xmas_avg_snow[year], snow_threshold)
+
+    return white_xmas_sum
     
+
+def white_xmas_all3_sum(snow_rasters, start_year=1991, end_year=2020, snow_threshold=1):
+    """
+    Classify and sum white christmas occurrences over given year period.
+    Christmas is classified as white only if all 3 christmas days (24-26) were white.
+
+    Args:
+        snow_rasters (dict[int, DataArray]): dictionary keyed by year with snow depth rasters as values.
+        start_year (int, optional): Start year of the interval, minimum is 1961. Defaults to 1991.
+        end_year (int, optional): End year of the interval. Defaults to 2020.
+        snow_threshold (int, optional): Snow depth threshold in cm for day to be considered white.
+            Defaults to 1.
+
+    Returns:
+        DataArray: raster containing the sum of white christmas over given period
+    """
+    # check if given interval is valid
+    check_year_interval(start_year, end_year)
+
+    white_xmas_sum = classify_all_white_xmas(snow_rasters[start_year], snow_threshold)
+    for year in range(start_year+1, end_year+1):
+       white_xmas_sum += classify_all_white_xmas(snow_rasters[year], snow_threshold)
+
+    return white_xmas_sum
+
 
 def classify_prob_white_xmas(xmas_sum_raster):
     """
