@@ -15,7 +15,6 @@ __author__ = "Marcelo Mouta"
 import snow_utils
 import rioxarray as rxr
 import numpy as np
-import xarray as xr
 import matplotlib.pyplot as plt
 from rasterio.errors import RasterioIOError
 
