@@ -102,6 +102,25 @@ def xmas_avg_snow_rasters(snow_rasters):
     return xmas_snow
 
 
+def reclassify_raster(raster, bins):
+    """Helper function to reclassify raster according to given bins"""
+    
+    # Apply the reclassification
+    reclassified = np.digitize(raster, bins)
+
+    # Retain NaN values by ensuring they are not reclassified
+    reclassified = np.where(~np.isnan(raster), reclassified, np.nan)
+
+    # Convert to an xarray DataArray
+    reclassified = xr.DataArray(
+        reclassified,
+        dims=raster.dims,  # Keep the same dimensions
+        coords=raster.coords,  # Retain the spatial coordinates
+        attrs=raster.attrs  # Preserve the original attributes
+    )
+    return reclassified
+
+
 def classify_white_day(snow_day_raster, snow_threshold=1):
     """
     Classify day as white given snow raster for single day (or day average)
@@ -225,22 +244,8 @@ def classify_prob_white_xmas(xmas_sum_raster):
     return reclassify_raster(xmas_sum_raster, bins)
 
 
-def reclassify_raster(raster, bins):
-
-    # Apply the reclassification
-    reclassified = np.digitize(raster, bins)
-
-    # Retain NaN values by ensuring they are not reclassified
-    reclassified = np.where(~np.isnan(raster), reclassified, np.nan)
-
-    # Convert to an xarray DataArray
-    reclassified = xr.DataArray(
-        reclassified,
-        dims=raster.dims,  # Keep the same dimensions
-        coords=raster.coords,  # Retain the spatial coordinates
-        attrs=raster.attrs  # Preserve the original attributes
-    )
-    return reclassified
+def reproject_map(raster, crs="EPSG:3857"):
+    return raster.rio.reproject(dst_crs=crs)
 
 
 def plot_prob_white_xmas(reclassified_raster, start_year, end_year):
@@ -256,6 +261,15 @@ def plot_prob_white_xmas(reclassified_raster, start_year, end_year):
     plt.axis('off')
     plt.title(f"Probability of White Christmas in Finland {start_year}-{end_year}")
     plt.show()
+
+
+def get_tick_locations(ticks):
+    """Calculate tick locations at 1/4 and 3/4 of the classification scale"""
+    start = ticks[0]
+    end = ticks[-1]
+    diff = end - start
+
+    return [start + diff/4, end - diff/4]
 
 
 def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
@@ -284,16 +298,3 @@ def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
 
     plt.title(f"White Christmas {year}")
     plt.show()
-
-
-def reproject_map(raster, crs="EPSG:3857"):
-    return raster.rio.reproject(dst_crs=crs)
-
-
-def get_tick_locations(ticks):
-    """Calculate tick locations at 1/4 and 3/4 of the classification scale"""
-    start = ticks[0]
-    end = ticks[-1]
-    diff = end - start
-
-    return [start + diff/4, end - diff/4]
