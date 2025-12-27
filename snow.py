@@ -1,7 +1,11 @@
 """
-This module provides functions for loading and analyzing FMI snow cover data
+This module provides functions for loading and analyzing FMI snow cover data.
 
-Dataset can be dowloaded from Paituli: https://paituli.csc.fi/download.html?data_id=il_daily_snow_10km_geotiff_euref
+A special focus is given to "White Christmas" analysis, for which several classification and
+plotting functions are included.
+
+Dataset can be dowloaded from Paituli:
+    https://paituli.csc.fi/download.html?data_id=il_daily_snow_10km_geotiff_euref
 
 This dataset by Finnish Meteorological institute is licensed under a Creative Commons Attribution 4.0
 International License (CC BY 4.0)
@@ -245,22 +249,8 @@ def classify_prob_white_xmas(xmas_sum_raster):
 
 
 def reproject_map(raster, crs="EPSG:3857"):
+    """Helper function to reproject raster for better map visualisation"""
     return raster.rio.reproject(dst_crs=crs)
-
-
-def plot_prob_white_xmas(reclassified_raster, start_year, end_year):
-
-    # Reproject raster for better map visualisation
-    plot_raster = reproject_map(reclassified_raster)
-    
-    # create custom cmap
-    custom_cmap = plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
-    
-    # Plot using xarray's plot method
-    plot = plot_raster.plot(cmap=custom_cmap, figsize=(6,6))
-    plt.axis('off')
-    plt.title(f"Probability of White Christmas in Finland {start_year}-{end_year}")
-    plt.show()
 
 
 def get_tick_locations(ticks):
@@ -297,4 +287,21 @@ def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
     plt.axis('off')
 
     plt.title(f"White Christmas {year}")
+
+    plt.show()
+
+
+def plot_prob_white_xmas(reclassified_raster, start_year, end_year):
+    #TODO: add docstring and improve colobar labeling 
+
+    # Reproject raster for better map visualisation
+    plot_raster = reproject_map(reclassified_raster)
+    
+    # create custom cmap
+    custom_cmap = plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
+    
+    # Plot using xarray's plot method
+    plot = plot_raster.plot(cmap=custom_cmap, figsize=(6,6))
+    plt.axis('off')
+    plt.title(f"Probability of White Christmas in Finland {start_year}-{end_year}")
     plt.show()
