@@ -3,6 +3,8 @@ This module contains helper functions for the snow.py module.
 """
 __author__ = "Marcelo Mouta"
 
+import numpy as np
+import xarray as xr
 
 def check_year_interval(start_year, end_year):
     """
