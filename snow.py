@@ -68,7 +68,7 @@ def open_snow_rasters(raster_dir, start_year=1961, end_year=2022, missing_data=F
     return snow_rasters
 
 
-def xmas_average(year_raster):
+def xmas_average_snow(year_raster):
     """
     Returns raster with 24-26 December average snow depth given year raster
     """
@@ -83,29 +83,67 @@ def xmas_average(year_raster):
     return xmas_average
 
 
-def xmas_snow_rasters(snow_rasters):
+def xmas_avg_snow_rasters(snow_rasters):
     """"Return dictionary with Christmas average snow rasters given snow rasters dictionary"""
 
     xmas_snow = dict()
 
     for year in snow_rasters.keys():
-        xmas_snow[year] = xmas_average(snow_rasters[year])
+        xmas_snow[year] = xmas_average_snow(snow_rasters[year])
     
     return xmas_snow
+
+
+def classify_all_white_xmas(year_raster, snow_threshold=1):
+    """
+    Classify Christmas (24.-26.12) as white if all 3 days are white
+
+    Args:
+        year_raster (DataArray): raster with year snow depth cover
+        snow_threshold (int, optional): Snow depth threshold (in cm) for day to be considered white. Defaults to 1.
+
+    Returns:
+        DataArray: Reclassified raster with class 1 for all white christmas and class 0 otherwise 
+    """
+
+    xmas_days_indices = [-8, -7, -6] # indices for 24-26 December
+
+    xmas_rasters = []
+    for i in xmas_days_indices:
+        xmas_day_raster = year_raster.isel(band=i)
+        white_xmas_day = classify_white_day(xmas_day_raster, snow_threshold)
+        xmas_rasters.append(white_xmas_day)
+
+    return xmas_rasters[0] * xmas_rasters[1] * xmas_rasters[2]
+
+
         
 
-def classify_white_xmas(xmas_year_raster, snow_threshold=1):
+def classify_white_day(snow_day_raster, snow_threshold=1):
     """
-    Classify White Christmas given raster with christmas average snow for that year
-    """
+    Classify day as white given snow raster for single day (or day average)
 
+    Args:
+        snow_day_raster (DataArray): raster with snow depth cover for that day (or day average)
+        snow_threshold (int, optional): Snow depth threshold in cm for day to be considered white. Defaults to 1.
+
+    Returns:
+        DataArray: Reclassified raster with classes 0 for no-snow and 1 for white day 
+
+    """
     if snow_threshold <= 0:
         raise ValueError("snow_threshold must be bigger than 0")
 
-    # Define the bins
+    # Define 2 bins: no-snow and white day
     bins = [0, snow_threshold, np.inf]
 
-    return reclassify_raster(xmas_year_raster, bins)
+    # Reclassify the raster with 2 snow categories
+    reclassified = reclassify_raster(snow_day_raster, bins)
+
+    # change classification values from [1,2] to [0,1]
+    reclassified -= 1
+    
+    return reclassified
     
 
 def classify_prob_white_xmas(xmas_sum_raster):
