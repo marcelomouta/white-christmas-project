@@ -1,5 +1,5 @@
 """
-This module provides functions for loading and analyzing FMI snow cover data.
+This module provides functions for loading and analyzing Finnish Meteorological Institute (FMI) snow cover data.
 
 A special focus is given to "White Christmas" analysis, for which several classification and
 plotting functions are included.
