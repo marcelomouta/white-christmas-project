@@ -217,24 +217,16 @@ def classify_prob_white_xmas(xmas_sum_raster):
     return snow_utils.reclassify_raster(xmas_sum_raster, bins)
 
 
-def reproject_map(raster, crs="EPSG:3857"):
-    """Helper function to reproject raster for better map visualisation"""
-    return raster.rio.reproject(dst_crs=crs)
-
-
-def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
+def plot_white_xmas(white_xmas_raster, year, snow_threshold=1):
     """
     Plot White Christmas map given reclassified raster for that year
     """
-
-    # Reproject raster for better map visualisation
-    plot_raster = plot_raster = reproject_map(reclassified_raster)
 
     # create custom cmap
     snow_cmap = plt.matplotlib.colors.ListedColormap(['dimgray', 'lightblue'])
     
     # Plot using xarray's plot method
-    plot = plot_raster.plot(cmap=snow_cmap, figsize=(6,6))
+    plot = white_xmas_raster.plot(cmap=snow_cmap, figsize=(6,6))
 
     # Set only the classification ticks on the colorbar
     colorbar = plot.colorbar
@@ -247,21 +239,27 @@ def plot_white_xmas(reclassified_raster, year, snow_threshold=1):
     plt.axis('off')
 
     plt.title(f"White Christmas {year}")
-
     plt.show()
 
 
-def plot_prob_white_xmas(reclassified_raster, start_year, end_year):
+def plot_prob_white_xmas(raster, start_year, end_year):
     #TODO: add docstring and improve colobar labeling 
-
-    # Reproject raster for better map visualisation
-    plot_raster = reproject_map(reclassified_raster)
-    
+ 
     # create custom cmap
     custom_cmap = plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
     
     # Plot using xarray's plot method
-    plot = plot_raster.plot(cmap=custom_cmap, figsize=(6,6))
+    plot = raster.plot(cmap=custom_cmap, figsize=(6,6))
+
+    # Set only the classification ticks on the colorbar
+    colorbar = plot.colorbar
+    ticks = [1.5,2.5,3.5,4.5,5.5]
+    labels = ['Only 5/10 white', '6-8 / 10 white', '8-9 / 10 white', 'White almost every year', 'Always White']
+    colorbar.set_ticks(ticks, labels=labels)
+    #colorbar.set_label("Snow Classification")
+
+    # disable all other axis, lines and ticks
     plt.axis('off')
+
     plt.title(f"Probability of White Christmas in Finland {start_year}-{end_year}")
     plt.show()
