@@ -31,7 +31,24 @@ Fill in details of your final project below. You can remove this instructions-se
 
 ## Topic: 
 
+This projects attemps to analyze the likelihood of a "White Christmas" in Finland. It uses FMI's snow depth data to answer the following questions:
+- How likely is it to observe a "White Christmas" across Finland?
+- Has that likelihood changed since there is data available?
+
+
 ### Structure of this repository:
+
+```
+/final-assignment-marcelomouta
+├── final-assignment.ipnyb  # Notebook exemplifying the usage of snow.py
+├── snow.py                 # Python module for loading and analyzing FMI snow depth rasters
+├── snow_utils.py           # Helper functions for snow.py
+├── /data
+    └── /regions            # Shapefile with Finland's regions
+    └── /snow               # Sample of FMI snow depth rasters used with snow.py
+├── /img                    # Images used in documentation
+└── README.md               # Project documentation
+```
 
 ### Input data:
 
@@ -40,13 +57,6 @@ Fill in details of your final project below. You can remove this instructions-se
 ### Results:
 
 ### References:
-
-### Use of AI:
-
-
-*edit according to your submission:*
-- Literature related to the topic
-- Links to websites, tutorials books or articles that you found useful
 
 
 
