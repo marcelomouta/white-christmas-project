@@ -12,7 +12,7 @@ International License (CC BY 4.0)
 """
 __author__ = "Marcelo Mouta"
 
-import snow_utils
+import snow_utils as utils
 import rioxarray as rxr
 import numpy as np
 import matplotlib.pyplot as plt
@@ -48,7 +48,7 @@ def open_snow_rasters(raster_dir, start_year=1961, end_year=2022, missing_data=F
         ValueError: If start_year and end_year do not form a valid interval within 1961-2022
     """
     # check if given interval is valid
-    snow_utils.check_year_interval(start_year, end_year)
+    utils.check_year_interval(start_year, end_year)
 
     # year interval for which snow data will be retrieved
     year_interval = range(start_year, end_year+1)
@@ -114,7 +114,7 @@ def classify_white_day(snow_day_raster, snow_threshold=1):
     bins = [0, snow_threshold, np.inf]
 
     # Reclassify the raster with 2 snow categories
-    reclassified = snow_utils.reclassify_raster(snow_day_raster, bins)
+    reclassified = utils.reclassify_raster(snow_day_raster, bins)
 
     # change classification values from [1,2] to [0,1]
     reclassified -= 1
@@ -163,7 +163,7 @@ def white_xmas_avg_sum(xmas_avg_snow, start_year=1991, end_year=2020, snow_thres
         DataArray: raster containing the sum of white christmas over given period
     """
     # check if given interval is valid
-    snow_utils.check_year_interval(start_year, end_year)
+    utils.check_year_interval(start_year, end_year)
 
     white_xmas_sum = classify_white_day(xmas_avg_snow[start_year], snow_threshold)
     for year in range(start_year+1, end_year+1):
@@ -188,7 +188,7 @@ def white_xmas_all3_sum(snow_rasters, start_year=1991, end_year=2020, snow_thres
         DataArray: raster containing the sum of white christmas over given period
     """
     # check if given interval is valid
-    snow_utils.check_year_interval(start_year, end_year)
+    utils.check_year_interval(start_year, end_year)
 
     white_xmas_sum = classify_all_white_xmas(snow_rasters[start_year], snow_threshold)
     for year in range(start_year+1, end_year+1):
@@ -214,7 +214,7 @@ def classify_prob_white_xmas(xmas_sum_raster):
     # Define the bins
     bins = [0, 6, 8.3, 9.3, 9.7, 10]
 
-    return snow_utils.reclassify_raster(xmas_sum_raster, bins)
+    return utils.reclassify_raster(xmas_sum_raster, bins)
 
 
 def plot_white_xmas(white_xmas_raster, year, snow_threshold=1):
@@ -230,7 +230,7 @@ def plot_white_xmas(white_xmas_raster, year, snow_threshold=1):
 
     # Set only the classification ticks on the colorbar
     colorbar = plot.colorbar
-    ticks = snow_utils.get_tick_locations(colorbar.get_ticks())
+    ticks = utils.get_tick_locations(colorbar.get_ticks())
     labels = ['No Snow', f'Snow present \n(at least {snow_threshold}cm)']
     colorbar.set_ticks(ticks, labels=labels)
     colorbar.set_label("Snow Classification")
