@@ -68,9 +68,9 @@ def open_snow_rasters(raster_dir, start_year=1961, end_year=2022, missing_data=F
     return snow_rasters
 
 
-def xmas_average_snow(year_raster):
+def average_xmas_snow(year_raster):
     """
-    Returns raster with 24-26 December average snow depth given year raster
+    Returns raster with average snow depth in 24-26 December given year raster
     """
 
     # Get rasters for Christmas days (24-26) December
@@ -83,15 +83,15 @@ def xmas_average_snow(year_raster):
     return xmas_average
 
 
-def xmas_avg_snow_rasters(snow_rasters):
-    """"Return dictionary with Christmas average snow rasters given snow rasters dictionary"""
+def avg_xmas_snow_rasters(snow_rasters):
+    """"Return dictionary with average Christmas snow rasters given snow rasters dictionary"""
 
-    xmas_snow = dict()
+    avg_xmas_snow = dict()
 
     for year in snow_rasters.keys():
-        xmas_snow[year] = xmas_average_snow(snow_rasters[year])
+        avg_xmas_snow[year] = average_xmas_snow(snow_rasters[year])
     
-    return xmas_snow
+    return avg_xmas_snow
 
 
 def classify_white_day(snow_day_raster, snow_threshold=1):
@@ -153,7 +153,7 @@ def white_xmas_avg_sum(xmas_avg_snow, start_year=1991, end_year=2020, snow_thres
     of 3 christmas days (24-26) is bigger than given threshold.
 
     Args:
-        xmas_avg_snow (dict[int, DataArray]): dictionary keyed by year with christmas average snow depth rasters as values.
+        xmas_avg_snow (dict[int, DataArray]): dictionary keyed by year with average christmas snow depth rasters as values.
         start_year (int, optional): Start year of the interval, minimum is 1961. Defaults to 1991.
         end_year (int, optional): End year of the interval. Defaults to 2020.
         snow_threshold (int, optional): Snow depth threshold (in cm) for day to be considered white.
