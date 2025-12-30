@@ -15,20 +15,6 @@ Once you are finished with the final assignment, edit this readme and add "x" to
 The final deadline for submission is **6.1.2026**.
 
 
-### Instructions
-
-*you can remove these instructions for the final submission*
-
-Read the final assignment instructions from the course webpages [https://autogis-site.readthedocs.io](https://autogis-site.readthedocs.io/en/latest/final-assignment/final-assignment.html). Remember to write readable code, and to provide adequate documentation using inline comments and markdown. Organize all your code(s) / notebook(s) into this repository and **add links to all relevant files to this `README.md`file**. In sum, anyone who downloads this repository should be able to **read your code and documentation** and understand what is going on, and **run your code** in order to reproduce the same results! :) 
-
-**Modify this readme so that anyone reading it gets a quick overview of your final work topic, and finds all the necessary input data, code and results.** 
-
-*Note: If your code requires some python packages not found in the csc notebooks environment, please mention them also in this readme and provide installation instrutions.*
-
-*Note: Don't upload large files into GitHub! If you are using large input files, provide downloading instructions and perhaps a small sample of the data in this repository for demonstrating your workflow.*
-
-Fill in details of your final project below. You can remove this instructions-section from the README-file if you want.
-
 ## Topic: 
 
 This projects attemps to analyze the likelihood of a "White Christmas" in Finland. It uses FMI's snow depth data to answer the following questions:
@@ -67,20 +53,34 @@ Aditionally, vector data with the regions of Finland by The National Land Survey
 
 ### Analysis steps:
 
-The steps for the analysis are explained briefly in here, but can be understood in more detail in the provided notebook.
+The steps for the analysis are explained briefly below, but can be understood in more detail in the provided notebook.
 
 After loading the FMI snow cover data (and optionally MML border shapefiles), one can use `snow.py` to:
  - Convert FMI yearly snow rasters into average snow during Christmas days (24.-26.12)
- - Classify each year's average Christmas snow into a a white or non-white Christmas if the average passes a given threshold.
- - Using last steps analysis, classify the likelihood of white christmas over a given period into 5 distinct probability classes.
+ - Classify each year's average Christmas snow into a a white or non-white Christmas if the average passes a given threshold
+ - Using last steps analysis, classify the likelihood of white christmas over a given period into 5 distinct probability classes
  - Go further with the analysis by comparing distinct time period results with each other.
 
 ### Results:
 
+After performing the previously described analysis, the following map was produced for the period 1991-2020:
 
+![Obtained map with probability of white christmas in Finland (1991-2020)](img/prob_wxmas_1991-2020.png)
+
+The probability classes have a good overlap with the map provided by FMI, even though it is not known which criteria was used to consider a christmas as white in that case.
+
+From this point, the following map was obtained by adding together the previous 1991-2020 analysis with that of 1961-1990:
+
+![side-by-side maps with probability of white christmas in Finland for 1961-1990 and 1991-2020](img/prob_wxmas_1961-1990_1991-2020.png)
+
+The side-by-side maps shows a clear change in the likelihood of a white Christmas in Finland, in particular in the soutwest regions of the country. This analysis and resulting maps give us good answers on the questions asked at the beggining of this document.
+
+
+The provided notebook has step-by-step instructions on how to produce both of these 2 maps, among others.
 
 ### Feedback
 -
+
 
 ### References:
 
