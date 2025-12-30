@@ -17,7 +17,7 @@ The final deadline for submission is **6.1.2026**.
 
 ## Topic: 
 
-This projects attemps to analyze the likelihood of a "White Christmas" in Finland. It uses FMI's snow depth data to answer the following questions:
+This projects attemps to analyze the likelihood of a "White Christmas" in Finland. It uses Finnish Meteorological Institute (FMI) snow depth data to answer the following questions:
 - How likely is it to observe a "White Christmas" across Finland?
 - Has that likelihood changed since there is data available?
 
@@ -73,13 +73,16 @@ From this point, the following map was obtained by adding together the previous 
 
 ![side-by-side maps with probability of white christmas in Finland for 1961-1990 and 1991-2020](img/prob_wxmas_1961-1990_1991-2020.png)
 
-The side-by-side maps shows a clear change in the likelihood of a white Christmas in Finland, in particular in the soutwest regions of the country. This analysis and resulting maps give us good answers on the questions asked at the beggining of this document.
+The side-by-side maps show a clear change in the likelihood of a white Christmas in Finland, in particular in the soutwest regions of the country. This analysis and resulting maps give us good answers on the questions asked at the beggining of this document.
 
 
 The provided notebook has step-by-step instructions on how to produce both of these 2 maps, among others.
 
 ### Feedback
--
+
+The project was really interesting to make, even though quite challenging at times. Coming from a CS background, the programming part in itself was not the barrier, but instead dealing with spatial data and understading how to retrieve, analyse, and effectively visualizing such data, a first for me.
+
+This project idea came from seeing the previously mentioned FMI map on the news and imagining how I could produce it myself. It started as a little challenge and quickly it turned into my final project. Navigating the finnish open data sources, dealing with wfs, and such, was something that I wouldn't have been able to do without this course, which I believe has been quite valuable, and empowered me to do new things. Besides that, having to use the raster python modules (rioxarray, etc) more extensively that in the exercises allowed me to understand them better and to do more complex operations that I was not able to do before. All in all, it was a great learning experience and I intend to use the tools I go to know here as much as possible in the future.
 
 
 ### References:
