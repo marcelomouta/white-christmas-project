@@ -20,9 +20,20 @@ from rasterio.errors import RasterioIOError
 
 
 def open_snow_year_raster(raster_dir, year):
-    """Open FMI snow depth raster for a given year"""
+    """
+    Open FMI snow depth raster of given year
     
+    Args:
+        raster_dir (str | Path): path where snow depth rasters are located
+        year: raster year
+    
+    Returns:
+        DataArray: raster with snow depth for given year
+    """
+    # Get raster filename from dir and year
     raster_file = raster_dir /  f"snow_{year}.tif"
+
+    # Load raster
     year_raster = rxr.open_rasterio(raster_file, masked=True)
 
     # CRS should be in ETRS-TM35FIN (EPSG:3067)
@@ -70,9 +81,14 @@ def open_snow_rasters(raster_dir, start_year=1961, end_year=2022, missing_data=F
 
 def average_xmas_snow(year_raster):
     """
-    Returns raster with average snow depth in 24-26 December given year raster
-    """
+    Returns raster with average snow depth of 24-26 December given year raster
 
+    Args:
+        year_raster (DataArray): raster with year snow depth cover
+
+    Returns:
+        DataArray: raster with average snow depth from 24-26 of december of given year 
+    """
     # Get rasters for Christmas days (24-26) December
     xmas_eve = year_raster.isel(band=-8) # day 24.12
     xmas_day = year_raster.isel(band=-7) # day 25.12
@@ -84,8 +100,16 @@ def average_xmas_snow(year_raster):
 
 
 def avg_xmas_snow_rasters(snow_rasters):
-    """"Return dictionary with average Christmas snow rasters given snow rasters dictionary"""
+    """"
+    Calculate average Christmas (24.-26.12) snow depth for given rasters
 
+    Args:
+        snow_rasters (dict[int, DataArray]): dictionary keyed by year with snow depth rasters as values
+
+    Returns:
+        dict[int, DataArray]: dictionary keyed by year with average of 24.-26.12 snow depth rasters as values.
+    """
+    # dict of avg snow rasters keyed by year
     avg_xmas_snow = dict()
 
     for year in snow_rasters.keys():
@@ -210,7 +234,6 @@ def classify_prob_white_xmas(xmas_sum_raster):
     Returns:
         DataArray: reclassified raster with 5 probability classes of white Christmas ocurrence
     """
-    
     # Define the bins
     bins = [0, 6, 8.3, 9.3, 9.7, 10]
 
@@ -220,8 +243,14 @@ def classify_prob_white_xmas(xmas_sum_raster):
 def plot_white_xmas(raster, year, snow_threshold=1, borders=None):
     """
     Plot White Christmas map given reclassified raster for that year
+    
+    Args:
+        raster (DataArray): raster with classes 0 for no-snow and 1 for white christmas
+        year (int): year for which raster refers to
+        snow_threshold (int, optional): Snow depth threshold (in cm) used in given raster.
+            Defaults to 1.
+        borders (GeoDataFrame, optional): Borders vector data to plot. Defaults to None.
     """
-
     # create custom cmap
     snow_cmap = plt.matplotlib.colors.ListedColormap(['dimgray', 'lightblue'])
 
@@ -245,8 +274,18 @@ def plot_white_xmas(raster, year, snow_threshold=1, borders=None):
 
 
 def plot_prob_white_xmas(raster, start_year, end_year, borders=None):
-    #TODO: add docstring  
- 
+    """
+    Plot raster with probability of white Christmas over 10 years for a given interval
+
+    This plot mimics the first map in these FMI statistics:
+    https://en.ilmatieteenlaitos.fi/christmas-weather 
+    
+    Args:
+        raster (DataArray): raster with 5 probability classes of white Christmas ocurrence
+        start_year (int): Start year of the interval.
+        end_year (int): End year of the interval.
+        borders (GeoDataFrame, optional): Borders vector data to plot. Defaults to None.
+    """
     # use custom cmap
     custom_cmap = utils.wxmas_prob_cmap()
 
@@ -270,8 +309,18 @@ def plot_prob_white_xmas(raster, start_year, end_year, borders=None):
 
 
 def plot_prob_wxmas_side_by_side(raster1, start_year1, end_year1, raster2, start_year2, end_year2, borders=None):
-    #TODO: add docstring
-
+    """
+    Plot side-by-side 2 rasters with probability of white Christmas over 2 distinct periods
+    
+    Args:
+        raster1 (DataArray): raster with probability of white Christmas during first period
+        start_year1 (int): Start year of the first interval.
+        end_year1 (int): End year of the first interval.
+        raster2 (DataArray): raster with probability of white Christmas during second period
+        start_year2 (int): Start year of the second interval.
+        end_year2 (int): End year of the second interval.
+        borders (GeoDataFrame, optional): Borders vector data to plot. Defaults to None.
+    """
     # add 1 row with 2 subplots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 6))
     
@@ -302,7 +351,7 @@ def plot_prob_wxmas_side_by_side(raster1, start_year1, end_year1, raster2, start
     ax1.axis('off')
     ax2.axis('off')
 
-    plt.suptitle(f"Probability of White Christmas over distinct time periods")
+    plt.suptitle("Probability of White Christmas over distinct time periods")
     plt.show()
 
     
