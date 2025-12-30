@@ -217,16 +217,23 @@ def classify_prob_white_xmas(xmas_sum_raster):
     return utils.reclassify_raster(xmas_sum_raster, bins)
 
 
-def plot_white_xmas(white_xmas_raster, year, snow_threshold=1):
+def plot_white_xmas(white_xmas_raster, year, snow_threshold=1, borders=None):
     """
     Plot White Christmas map given reclassified raster for that year
     """
 
     # create custom cmap
     snow_cmap = plt.matplotlib.colors.ListedColormap(['dimgray', 'lightblue'])
+
+    fig, ax = plt.subplots(figsize=(6, 6))
     
     # Plot using xarray's plot method
-    plot = white_xmas_raster.plot(cmap=snow_cmap, figsize=(6,6))
+    plot = white_xmas_raster.plot.imshow(ax=ax, cmap=snow_cmap, vmin=0, vmax=1)
+
+    # If borders vector data is given, plot it too
+    if borders is not None:
+        borders = borders.to_crs(white_xmas_raster.rio.crs)
+        borders.plot(ax=ax, facecolor='none', linewidth=0.3)
 
     # Set only the classification ticks on the colorbar
     colorbar = plot.colorbar
@@ -242,24 +249,64 @@ def plot_white_xmas(white_xmas_raster, year, snow_threshold=1):
     plt.show()
 
 
-def plot_prob_white_xmas(raster, start_year, end_year):
-    #TODO: add docstring and improve colobar labeling 
+def plot_prob_white_xmas(raster, start_year, end_year, borders=None):
+    #TODO: add docstring  
  
-    # create custom cmap
-    custom_cmap = plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
+    # use custom cmap
+    custom_cmap = utils.wxmas_prob_cmap()
+
+    fig, ax = plt.subplots(figsize=(6, 6))
     
     # Plot using xarray's plot method
-    plot = raster.plot(cmap=custom_cmap, figsize=(6,6))
+    plot = raster.plot.imshow(ax=ax, cmap=custom_cmap, vmin=1, vmax=6)
+
+    # If borders vector data is given, plot it too
+    if borders is not None:
+        borders = borders.to_crs(raster.rio.crs)
+        borders.plot(ax=ax, facecolor='none', linewidth=0.3)
 
     # Set only the classification ticks on the colorbar
-    colorbar = plot.colorbar
-    ticks = [1.5,2.5,3.5,4.5,5.5]
-    labels = ['Only 5/10 white', '6-8 / 10 white', '8-9 / 10 white', 'White almost every year', 'Always White']
-    colorbar.set_ticks(ticks, labels=labels)
-    #colorbar.set_label("Snow Classification")
-
+    utils.set_wxmas_prob_ticks(plot.colorbar)
+    
     # disable all other axis, lines and ticks
     plt.axis('off')
 
     plt.title(f"Probability of White Christmas in Finland {start_year}-{end_year}")
     plt.show()
+
+
+def plot_prob_wxmas_side_by_side(raster1, start_year1, end_year1, raster2, start_year2, end_year2, borders=None):
+    #TODO: add docstring
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 6))
+    
+    # use custom cmap
+    custom_cmap = utils.wxmas_prob_cmap()
+
+    plot1 = raster1.plot.imshow(ax=ax1, cmap=custom_cmap, vmin=1, vmax=6)
+    plot1.colorbar.remove()
+    ax1.set_title(f"{start_year1}-{end_year1}")
+
+
+    plot2 = raster2.plot.imshow(ax=ax2, cmap=custom_cmap, vmin=1, vmax=6)
+    plot2.colorbar.remove()
+    ax2.set_title(f"{start_year2}-{end_year2}")
+
+    # If borders vector data is given, plot it too
+    if borders is not None:
+        borders = borders.to_crs(raster1.rio.crs)
+        borders.plot(ax=ax1, facecolor='none', linewidth=0.3)
+        borders.plot(ax=ax2, facecolor='none', linewidth=0.3)
+
+    # Set only the classification ticks on the colorbar
+    cbar = fig.colorbar(plot2, ax=[ax1,ax2])
+    utils.set_wxmas_prob_ticks(cbar)
+
+    # disable all other axis, lines and ticks
+    ax1.axis('off')
+    ax2.axis('off')
+
+    plt.suptitle(f"Probability of White Christmas over distinct time periods")
+    plt.show()
+
+    
