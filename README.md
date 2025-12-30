@@ -5,9 +5,9 @@
 
 Once you are finished with the final assignment, edit this readme and add "x" to the correct box:
 
-* [ ] Submitted
+* [x] Submitted
 
-* [x] I'm still working on my final assignment. 
+* [ ] I'm still working on my final assignment. 
 
 
 *If you have done this assignment in pair, write your groupmate's name here:* ----
