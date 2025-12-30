@@ -56,6 +56,11 @@ def plot_borders(borders, raster, axs):
     for ax in axs:
         borders.plot(ax=ax, facecolor='none', linewidth=0.3)
 
+def set_white_xmas_ticks(colorbar, snow_threshold):
+    ticks = get_tick_locations(colorbar.get_ticks())
+    labels = ['No Snow', f'Snow present \n(at least {snow_threshold}cm)']
+    colorbar.set_ticks(ticks, labels=labels)
+    colorbar.set_label("Snow Classification")
 
 def set_wxmas_prob_ticks(cbar):
     ticks = [1.5,2.5,3.5,4.5,5.5]

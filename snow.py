@@ -217,7 +217,7 @@ def classify_prob_white_xmas(xmas_sum_raster):
     return utils.reclassify_raster(xmas_sum_raster, bins)
 
 
-def plot_white_xmas(white_xmas_raster, year, snow_threshold=1, borders=None):
+def plot_white_xmas(raster, year, snow_threshold=1, borders=None):
     """
     Plot White Christmas map given reclassified raster for that year
     """
@@ -228,19 +228,14 @@ def plot_white_xmas(white_xmas_raster, year, snow_threshold=1, borders=None):
     fig, ax = plt.subplots(figsize=(6, 6))
     
     # Plot using xarray's plot method
-    plot = white_xmas_raster.plot.imshow(ax=ax, cmap=snow_cmap, vmin=0, vmax=1)
+    plot = raster.plot.imshow(ax=ax, cmap=snow_cmap, vmin=0, vmax=1)
 
     # If borders vector data is given, plot it too
     if borders is not None:
-        borders = borders.to_crs(white_xmas_raster.rio.crs)
-        borders.plot(ax=ax, facecolor='none', linewidth=0.3)
+        utils.plot_borders(borders, raster, [ax])
 
     # Set only the classification ticks on the colorbar
-    colorbar = plot.colorbar
-    ticks = utils.get_tick_locations(colorbar.get_ticks())
-    labels = ['No Snow', f'Snow present \n(at least {snow_threshold}cm)']
-    colorbar.set_ticks(ticks, labels=labels)
-    colorbar.set_label("Snow Classification")
+    utils.set_white_xmas_ticks(plot.colorbar, snow_threshold)
 
     # disable all other axis, lines and ticks
     plt.axis('off')
@@ -262,8 +257,7 @@ def plot_prob_white_xmas(raster, start_year, end_year, borders=None):
 
     # If borders vector data is given, plot it too
     if borders is not None:
-        borders = borders.to_crs(raster.rio.crs)
-        borders.plot(ax=ax, facecolor='none', linewidth=0.3)
+        utils.plot_borders(borders, raster, [ax])
 
     # Set only the classification ticks on the colorbar
     utils.set_wxmas_prob_ticks(plot.colorbar)
@@ -278,28 +272,30 @@ def plot_prob_white_xmas(raster, start_year, end_year, borders=None):
 def plot_prob_wxmas_side_by_side(raster1, start_year1, end_year1, raster2, start_year2, end_year2, borders=None):
     #TODO: add docstring
 
+    # add 1 row with 2 subplots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 6))
     
     # use custom cmap
     custom_cmap = utils.wxmas_prob_cmap()
 
+    # plot subplot 1
     plot1 = raster1.plot.imshow(ax=ax1, cmap=custom_cmap, vmin=1, vmax=6)
-    plot1.colorbar.remove()
     ax1.set_title(f"{start_year1}-{end_year1}")
 
-
+    # plot subplot 2
     plot2 = raster2.plot.imshow(ax=ax2, cmap=custom_cmap, vmin=1, vmax=6)
-    plot2.colorbar.remove()
     ax2.set_title(f"{start_year2}-{end_year2}")
 
     # If borders vector data is given, plot it too
     if borders is not None:
-        borders = borders.to_crs(raster1.rio.crs)
-        borders.plot(ax=ax1, facecolor='none', linewidth=0.3)
-        borders.plot(ax=ax2, facecolor='none', linewidth=0.3)
+        utils.plot_borders(borders, raster1, [ax1, ax2])
 
-    # Set only the classification ticks on the colorbar
+    # remove subplots colorbar and add one for the whole plot
+    plot1.colorbar.remove()
+    plot2.colorbar.remove()
     cbar = fig.colorbar(plot2, ax=[ax1,ax2])
+    
+    # Set only the classification ticks on the colorbar
     utils.set_wxmas_prob_ticks(cbar)
 
     # disable all other axis, lines and ticks
