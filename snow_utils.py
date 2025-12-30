@@ -5,6 +5,7 @@ __author__ = "Marcelo Mouta"
 
 import numpy as np
 import xarray as xr
+import matplotlib.pyplot as plt
 
 def check_year_interval(start_year, end_year):
     """
@@ -43,3 +44,11 @@ def reclassify_raster(raster, bins):
         attrs=raster.attrs  # Preserve the original attributes
     )
     return reclassified
+
+def wxmas_prob_cmap():
+    return plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
+
+def set_wxmas_prob_ticks(cbar):
+    ticks = [1.5,2.5,3.5,4.5,5.5]
+    labels = ['Only 5/10 white', '6-8 / 10 white', '8-9 / 10 white', 'White almost every year', 'Always White']
+    cbar.set_ticks(ticks, labels=labels)
