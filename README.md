@@ -35,6 +35,13 @@ This projects attemps to analyze the likelihood of a "White Christmas" in Finlan
 - How likely is it to observe a "White Christmas" across Finland?
 - Has that likelihood changed since there is data available?
 
+The first question is heavily inspired by the following FMI map[^1]:
+
+![Probability of white christmas in Finland (1991-2020)](img/joulu_valkea_9120.png)
+
+In this FMI map there are 5 different categories describing the likelihood of a White Christmas (24.-26.12) across Finland, from only 1 in 2 christmas being white all the way to always white.
+
+The `final-assignment.ipynb` notebook exemplifies how one can leverage the `snow.py` module from this repo to achieve a similar analysis. Several raster classification and custom plot functions are made available for this effect. Using them, one can go further with this kind of analysis to make comparisons of the likelihood of a "White Christmas" occurring in Finland over different time periods, shining light on the second proposed question.
 
 ### Structure of this repository:
 
@@ -52,12 +59,16 @@ This projects attemps to analyze the likelihood of a "White Christmas" in Finlan
 
 ### Input data:
 
+
+
 ### Analysis steps:
 
 ### Results:
 
 ### References:
 
+[^1]: The Probability of White Christmas is retrieved from the following [FMI Christmas weather statistics (in Finnish)](https://www.ilmatieteenlaitos.fi/joulunaika).  
+A similar analysis in English can be found [here](https://en.ilmatieteenlaitos.fi/christmas-weather), although with more outdated data. 
 
 
 ### Feedback
