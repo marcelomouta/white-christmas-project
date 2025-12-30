@@ -67,7 +67,17 @@ Aditionally, vector data with the regions of Finland by The National Land Survey
 
 ### Analysis steps:
 
+The steps for the analysis are explained briefly in here, but can be understood in more detail in the provided notebook.
+
+After loading the FMI snow cover data (and optionally MML border shapefiles), one can use `snow.py` to:
+ - Convert FMI yearly snow rasters into average snow during Christmas days (24.-26.12)
+ - Classify each year's average Christmas snow into a a white or non-white Christmas if the average passes a given threshold.
+ - Using last steps analysis, classify the likelihood of white christmas over a given period into 5 distinct probability classes.
+ - Go further with the analysis by comparing distinct time period results with each other.
+
 ### Results:
+
+
 
 ### Feedback
 -
