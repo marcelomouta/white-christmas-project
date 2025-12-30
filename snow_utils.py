@@ -1,5 +1,5 @@
 """
-This module contains helper functions for the snow.py module.
+This module contains helper functions used in the snow.py module.
 """
 __author__ = "Marcelo Mouta"
 
@@ -48,21 +48,29 @@ def reclassify_raster(raster, bins):
 
 
 def wxmas_prob_cmap():
+    """
+    Create custom colormap for white christmas probability map
+
+    Inspired by the first map in this FMI statistic: https://en.ilmatieteenlaitos.fi/christmas-weather
+    """
     return plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
 
 
 def plot_borders(borders, raster, axs):
+    """Plot borders vector data on given raster axes"""
     borders = borders.to_crs(raster.rio.crs)
     for ax in axs:
         borders.plot(ax=ax, facecolor='none', linewidth=0.3)
 
 def set_white_xmas_ticks(colorbar, snow_threshold):
+    """Set custom colorbar ticks for white christmas classification plot"""
     ticks = get_tick_locations(colorbar.get_ticks())
     labels = ['No Snow', f'Snow present \n(at least {snow_threshold}cm)']
     colorbar.set_ticks(ticks, labels=labels)
     colorbar.set_label("Snow Classification")
 
 def set_wxmas_prob_ticks(cbar):
+    """Set custom colorbar ticks for white christmas probability plot"""
     ticks = [1.5,2.5,3.5,4.5,5.5]
     labels = ['Only 5/10 white', '6-8 / 10 white', '8-9 / 10 white', 'White almost every year', 'Always White']
     cbar.set_ticks(ticks, labels=labels)
