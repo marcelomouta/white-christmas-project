@@ -146,14 +146,14 @@ def classify_all_white_xmas(year_raster, snow_threshold=1):
     return xmas_rasters[0] * xmas_rasters[1] * xmas_rasters[2]
 
 
-def white_xmas_avg_sum(xmas_avg_snow, start_year=1991, end_year=2020, snow_threshold=1):
+def white_avg_xmas_sum(avg_xmas_snow, start_year=1991, end_year=2020, snow_threshold=1):
     """
     Classify and sum white christmas occurrences over given year period.
     Christmas is classified as white if average snow depth
     of 3 christmas days (24-26) is bigger than given threshold.
 
     Args:
-        xmas_avg_snow (dict[int, DataArray]): dictionary keyed by year with average christmas snow depth rasters as values.
+        avg_xmas_snow (dict[int, DataArray]): dictionary keyed by year with average christmas snow depth rasters as values.
         start_year (int, optional): Start year of the interval, minimum is 1961. Defaults to 1991.
         end_year (int, optional): End year of the interval. Defaults to 2020.
         snow_threshold (int, optional): Snow depth threshold (in cm) for day to be considered white.
@@ -165,14 +165,14 @@ def white_xmas_avg_sum(xmas_avg_snow, start_year=1991, end_year=2020, snow_thres
     # check if given interval is valid
     utils.check_year_interval(start_year, end_year)
 
-    white_xmas_sum = classify_white_day(xmas_avg_snow[start_year], snow_threshold)
+    white_xmas_sum = classify_white_day(avg_xmas_snow[start_year], snow_threshold)
     for year in range(start_year+1, end_year+1):
-       white_xmas_sum += classify_white_day(xmas_avg_snow[year], snow_threshold)
+       white_xmas_sum += classify_white_day(avg_xmas_snow[year], snow_threshold)
 
     return white_xmas_sum
     
 
-def white_xmas_all3_sum(snow_rasters, start_year=1991, end_year=2020, snow_threshold=1):
+def all3_white_xmas_sum(snow_rasters, start_year=1991, end_year=2020, snow_threshold=1):
     """
     Classify and sum white christmas occurrences over given year period.
     Christmas is classified as white only if all 3 christmas days (24-26) were white.
