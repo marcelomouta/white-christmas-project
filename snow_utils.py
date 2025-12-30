@@ -7,6 +7,7 @@ import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
 
+
 def check_year_interval(start_year, end_year):
     """
     Check if given interval is within year range for which snow depth data is available
@@ -45,8 +46,16 @@ def reclassify_raster(raster, bins):
     )
     return reclassified
 
+
 def wxmas_prob_cmap():
     return plt.matplotlib.colors.ListedColormap(['yellow', 'lightblue', "tab:blue", 'darkslateblue', 'midnightblue'])
+
+
+def plot_borders(borders, raster, axs):
+    borders = borders.to_crs(raster.rio.crs)
+    for ax in axs:
+        borders.plot(ax=ax, facecolor='none', linewidth=0.3)
+
 
 def set_wxmas_prob_ticks(cbar):
     ticks = [1.5,2.5,3.5,4.5,5.5]
