@@ -14,6 +14,12 @@ Once you are finished with the final assignment, edit this readme and add "x" to
 
 The final deadline for submission is **6.1.2026**.
 
+## [Extra] Web tool for visualisation
+I made this web app for non-programming inclined people to be able to see the results as well:
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://whitexmas.streamlit.app)
+
+Sorry for adding this after submitting the project but I thought it would be worth it to include.
 
 ## Topic: 
 
