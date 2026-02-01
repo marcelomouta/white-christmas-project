@@ -17,13 +17,13 @@ The first question is heavily inspired by the following FMI map[^1]:
 
 In this FMI map there are 5 different categories describing the likelihood of a White Christmas (24.-26.12) across Finland, from only 1 in 2 christmas being white all the way to always white.
 
-The `final-assignment.ipynb` notebook exemplifies how one can leverage the `snow.py` module from this repo to achieve a similar analysis. Several raster classification and custom plot functions are made available for this effect. Using them, one can go further with this kind of analysis to make comparisons of the likelihood of a "White Christmas" occurring in Finland over different time periods, shining light on the second proposed question.
+The `white-christmas.ipynb` notebook exemplifies how one can leverage the `snow.py` module from this repo to achieve a similar analysis. Several raster classification and custom plot functions are made available for this effect. Using them, one can go further with this kind of analysis to make comparisons of the likelihood of a "White Christmas" occurring in Finland over different time periods, shining light on the second proposed question.
 
 ### Structure of this repository:
 
 ```
-/final-assignment-marcelomouta
-├── final-assignment.ipnyb  # Notebook exemplifying the usage of snow.py
+/white-christmas-project
+├── white-christmas.ipynb  # Notebook exemplifying the usage of snow.py
 ├── snow.py                 # Python module for loading and analyzing FMI snow depth rasters
 ├── snow_utils.py           # Helper functions for snow.py
 ├── /data
