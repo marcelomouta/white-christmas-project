@@ -1,27 +1,11 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/tWyQ2Yyn)
-# Final Assignment
+# White Christmas in Finland
 
-### Status
-
-Once you are finished with the final assignment, edit this readme and add "x" to the correct box:
-
-* [x] Submitted
-
-* [ ] I'm still working on my final assignment. 
-
-
-*If you have done this assignment in pair, write your groupmate's name here:* ----
-
-The final deadline for submission is **6.1.2026**.
-
-## [Extra] Web tool for visualisation
-I made this web app for non-programming inclined people to be able to see the results as well:
+## Web tool for visualisation
+There is a web app for non-programming inclined people to be able to see the results as well:
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://whitexmas.streamlit.app)
 
-Sorry for adding this after submitting the project but I thought it would be worth it to include.
-
-## Topic: 
+## Topic:
 
 This projects attemps to analyze the likelihood of a "White Christmas" in Finland. It uses Finnish Meteorological Institute (FMI) snow depth data to answer the following questions:
 - How likely is it to observe a "White Christmas" across Finland?
@@ -84,12 +68,6 @@ The side-by-side maps show a clear change in the likelihood of a white Christmas
 
 The provided notebook has step-by-step instructions on how to produce both of these 2 maps, among others.
 
-### Feedback
-
-The project was really interesting to make, even though quite challenging at times. Coming from a CS background, the programming part in itself was not the barrier, but instead dealing with spatial data and understading how to retrieve, analyse, and effectively visualizing such data, a first for me.
-
-This project idea came from seeing the previously mentioned FMI map on the news and imagining how I could produce it myself. It started as a little challenge and quickly it turned into my final project. Navigating the finnish open data sources, dealing with wfs, and such, was something that I wouldn't have been able to do without this course, which I believe has been quite valuable, and empowered me to do new things. Besides that, having to use the raster python modules (rioxarray, etc) more extensively that in the exercises allowed me to understand them better and to do more complex operations that I was not able to do before. All in all, it was a great learning experience and I intend to use the tools I go to know here as much as possible in the future.
-
 
 ### References:
 
@@ -99,10 +77,3 @@ A similar analysis in English can be found [here](https://en.ilmatieteenlaitos.f
 [^2]: The dataset is part of FMI Climgrid and it is licensed under a Creative Commons Attribution 4.0 International License. The dataset's metadata is available at [Etsin](https://etsin.fairdata.fi/dataset/c63d696a-8d42-44aa-8508-9024ee05cfa7).
 
 [^3]: Retrieved from [opendata.fi](https://www.opendata.fi/data/en_GB/dataset/suomen-maakunnat-2021-vuoden-2018-maakuntakoodeilla). The regions shapefile is provided by [MML](https://www.maanmittauslaitos.fi/en/maps-and-spatial-data) and it is licensed under a Creative Commons Attribution 4.0 International License.
-
-Grading: 
-
-Nice work!
-
-36/40
-Grade: 5
